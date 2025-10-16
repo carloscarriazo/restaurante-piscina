@@ -317,7 +317,7 @@ class KitchenController extends Controller
             $pendingOrders = Order::where('status', 'pending')->count();
             $preparingOrders = Order::where('status', 'in_process')->count();
             $completedToday = Order::whereDate('completed_at', today())->count();
-            
+
             // Calcular tiempo promedio de preparación (órdenes completadas hoy)
             $avgTime = Order::whereDate('completed_at', today())
                 ->whereNotNull('completed_at')

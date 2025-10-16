@@ -262,9 +262,9 @@
             try {
                 const response = await fetch('/api/kitchen/orders');
                 const result = await response.json();
-                
+
                 console.log('Respuesta API:', result); // Debug
-                
+
                 if (result.success) {
                     allOrders = result.data || [];
                     console.log('Órdenes cargadas:', allOrders.length); // Debug
@@ -272,7 +272,7 @@
                     allOrders = [];
                     console.error('Error en respuesta:', result.message);
                 }
-                
+
                 renderOrders();
                 document.getElementById('loading-state').classList.add('hidden');
             } catch (error) {
@@ -438,11 +438,11 @@
             try {
                 const response = await fetch(`/api/kitchen/orders/${orderId}/details`);
                 const result = await response.json();
-                
+
                 if (!result.success) {
                     throw new Error(result.message || 'Error al cargar detalles');
                 }
-                
+
                 const order = result.data;
 
                 modalContent.innerHTML = `
@@ -486,7 +486,7 @@
                             <span class="text-xl font-bold text-white">Total</span>
                             <span class="text-2xl font-bold text-cyan-300">${formatPrice(order.total)}</span>
                         </div>
-                        
+
                         <div class="flex gap-3 pt-4">
                             ${order.status === 'pending' || order.status_id === 2 ? `
                                 <button onclick="startPreparing(${order.id}); closeModal();"

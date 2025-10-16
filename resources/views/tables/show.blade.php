@@ -28,7 +28,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            
+
             <!-- Información Principal de la Mesa -->
             <div class="card-ocean">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -110,7 +110,7 @@
 
             <!-- Grid de 2 Columnas -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
+
                 <!-- Órdenes Recientes -->
                 <div class="card-ocean">
                     <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/20">

@@ -110,7 +110,7 @@ class NotificationManager {
      */
     connectWithPolling() {
         console.log('🔄 Usando polling para notificaciones...');
-        
+
         this.pollingInterval = setInterval(async () => {
             try {
                 const response = await fetch('/api/notifications/realtime?timeout=30', {
@@ -124,7 +124,7 @@ class NotificationManager {
 
                 if (response.ok) {
                     const data = await response.json();
-                    
+
                     if (data.success && data.data.has_new) {
                         data.data.notifications.forEach(notification => {
                             this.processNotification(notification);
@@ -227,7 +227,7 @@ class NotificationManager {
     addNotification(notification) {
         this.notifications.unshift(notification);
         this.unreadCount++;
-        
+
         // Mantener solo las últimas 50 notificaciones
         if (this.notifications.length > 50) {
             this.notifications = this.notifications.slice(0, 50);
@@ -254,7 +254,7 @@ class NotificationManager {
 
         try {
             const audio = new Audio();
-            
+
             switch (type) {
                 case 'kitchen':
                     audio.src = '/sounds/kitchen-ready.mp3';
@@ -302,7 +302,7 @@ class NotificationManager {
      */
     updatePageTitle() {
         const originalTitle = document.title.replace(/^\(\d+\) /, '');
-        
+
         if (this.unreadCount > 0) {
             document.title = `(${this.unreadCount}) ${originalTitle}`;
         } else {
@@ -328,7 +328,7 @@ class NotificationManager {
 
         if (this.reconnectAttempts <= this.maxReconnectAttempts) {
             console.log(`🔄 Reintentando conexión (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`);
-            
+
             setTimeout(() => {
                 this.connectToNotifications();
             }, this.reconnectInterval * this.reconnectAttempts);
@@ -390,12 +390,12 @@ class NotificationManager {
         if (this.pollingInterval) {
             clearInterval(this.pollingInterval);
         }
-        
+
         if (typeof Echo !== 'undefined') {
             Echo.leaveChannel('kitchen-updates');
             Echo.leaveChannel('inventory-alerts');
             Echo.leaveChannel('order-updates');
-            
+
             if (window.currentUserId) {
                 Echo.leaveChannel(`user.${window.currentUserId}`);
             }
