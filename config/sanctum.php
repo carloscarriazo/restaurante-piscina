@@ -45,9 +45,12 @@ return [
     | considered expired. This will override any values set in the token's
     | "expires_at" attribute, but first-party sessions are not affected.
     |
+    | Por seguridad, los tokens expirarán después de 7 días (10080 minutos).
+    | Esto fuerza a los usuarios a re-autenticarse periódicamente.
+    |
     */
 
-    'expiration' => null,
+    'expiration' => env('SANCTUM_EXPIRATION', 10080), // 7 días = 7 * 24 * 60
 
     /*
     |--------------------------------------------------------------------------

@@ -1,0 +1,65 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('orders', function (Blueprint $table) {
+            // Agregar solo los campos que no existen
+            if (!Schema::hasColumn('orders', 'code')) {
+                $table->string('code')->after('id')->unique()->nullable(); // Código único del pedido
+            }
+            if (!Schema::hasColumn('orders', 'customer_name')) {
+                $table->string('customer_name')->after('user_id')->nullable(); // Nombre del cliente
+            }
+            if (!Schema::hasColumn('orders', 'notes')) {
+                $table->text('notes')->after('customer_name')->nullable(); // Notas del pedido
+            }
+            if (!Schema::hasColumn('orders', 'total')) {
+                $table->decimal('total', 10, 2)->after('notes')->default(0); // Total del pedido
+            }
+            if (!Schema::hasColumn('orders', 'subtotal')) {
+                $table->decimal('subtotal', 10, 2)->after('total')->default(0); // Subtotal
+            }
+            if (!Schema::hasColumn('orders', 'tax')) {
+                $table->decimal('tax', 10, 2)->after('subtotal')->default(0); // Impuestos
+            }
+            if (!Schema::hasColumn('orders', 'discount')) {
+                $table->decimal('discount', 10, 2)->after('tax')->default(0); // Descuentos
+            }
+            if (!Schema::hasColumn('orders', 'completed_at')) {
+                $table->timestamp('completed_at')->after('kitchen_notified')->nullable(); // Hora de completado
+            }
+
+            // Por ahora mantener el enum existente, lo actualizaremos después manualmente
+            // $table->enum('status', ['pending', 'preparing', 'ready', 'served', 'cancelled'])->default('pending')->change();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('orders', function (Blueprint $table) {
+            // Solo eliminar las columnas que esta migración agregó
+            $columnsToCheck = ['code', 'customer_name', 'notes', 'total', 'subtotal', 'tax', 'discount', 'completed_at'];
+
+            foreach ($columnsToCheck as $column) {
+                if (Schema::hasColumn('orders', $column)) {
+                    $table->dropColumn($column);
+                }
+            }
+
+            $table->enum('status', ['pending', 'in_process', 'served', 'cancelled'])->default('pending')->change();
+        });
+    }
+};

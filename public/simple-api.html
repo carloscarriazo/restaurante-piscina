@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌊 Blue Lagoon API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #00BFA6, #3498DB);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .status {
+            font-size: 2rem;
+            margin: 20px 0;
+        }
+        .endpoint {
+            background: rgba(255,255,255,0.1);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .test-btn {
+            background: #FFD700;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .result {
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            display: none;
+            text-align: left;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌊 Blue Lagoon API</h1>
+        <div class="status" id="status">🔄 Verificando...</div>
+
+        <div class="endpoint">
+            <h3>🔗 API Ping</h3>
+            <button class="test-btn" onclick="testPing()">Probar Ping</button>
+            <div class="result" id="pingResult"></div>
+        </div>
+
+        <div class="endpoint">
+            <h3>🔐 Login</h3>
+            <button class="test-btn" onclick="testLogin()">Probar Login</button>
+            <div class="result" id="loginResult"></div>
+        </div>
+
+        <div class="endpoint">
+            <h3>📋 Órdenes</h3>
+            <button class="test-btn" onclick="testOrders()">Ver Órdenes</button>
+            <div class="result" id="ordersResult"></div>
+        </div>
+
+        <h2>✅ Funcionalidades Implementadas</h2>
+        <ul style="text-align: left; max-width: 500px; margin: 0 auto;">
+            <li>🔐 Autenticación con Laravel Sanctum</li>
+            <li>📋 Gestión completa de órdenes</li>
+            <li>🍽️ Catálogo de productos</li>
+            <li>🪑 Control de mesas</li>
+            <li>💰 Facturación combinada</li>
+            <li>🎁 Descuentos diarios</li>
+            <li>👥 Sistema de roles</li>
+        </ul>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8001/api';
+        let token = null;
+
+        async function testPing() {
+            const result = document.getElementById('pingResult');
+            result.style.display = 'block';
+            result.textContent = 'Probando...';
+
+            try {
+                const response = await fetch(`${API_BASE}/ping`);
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+                document.getElementById('status').textContent = '✅ API Online';
+            } catch (error) {
+                result.textContent = `Error: ${error.message}`;
+                document.getElementById('status').textContent = '❌ API Offline';
+            }
+        }
+
+        async function testLogin() {
+            const result = document.getElementById('loginResult');
+            result.style.display = 'block';
+            result.textContent = 'Probando login...';
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'admin@bluelagoon.com',
+                        password: 'password'
+                    })
+                });
+
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+
+                if (data.success) {
+                    token = data.data.token;
+                }
+            } catch (error) {
+                result.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function testOrders() {
+            const result = document.getElementById('ordersResult');
+            result.style.display = 'block';
+            result.textContent = 'Obteniendo órdenes...';
+
+            try {
+                const headers = {};
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+
+                const response = await fetch(`${API_BASE}/orders`, { headers });
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                result.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        // Auto-test ping al cargar
+        window.onload = testPing;
+    </script>
+</body>
+</html>
