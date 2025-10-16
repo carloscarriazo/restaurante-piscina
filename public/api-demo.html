@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌊 Blue Lagoon - API Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #00BFA6, #3498DB);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .api-section {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .endpoint {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #FFD700;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .get { background: #28a745; }
+        .post { background: #007bff; }
+        .put { background: #ffc107; color: black; }
+        .patch { background: #17a2b8; }
+        .delete { background: #dc3545; }
+
+        .url {
+            font-family: monospace;
+            background: rgba(0,0,0,0.3);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+
+        .test-button {
+            background: #FFD700;
+            color: #2c3e50;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 0;
+            transition: all 0.3s;
+        }
+
+        .test-button:hover {
+            background: #FFC107;
+            transform: translateY(-2px);
+        }
+
+        .result {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            display: none;
+        }
+
+        .status {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .online { background: #28a745; }
+        .offline { background: #dc3545; }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌊 Blue Lagoon API</h1>
+            <p class="subtitle">API REST Completa para Aplicaciones Móviles</p>
+            <div>
+                <span class="status online" id="apiStatus"></span>
+                <span id="statusText">Verificando conexión...</span>
+            </div>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔐</div>
+                <h3>Autenticación Segura</h3>
+                <p>Laravel Sanctum con tokens JWT</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📋</div>
+                <h3>Gestión de Órdenes</h3>
+                <p>CRUD completo con estados</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🍽️</div>
+                <h3>Catálogo de Productos</h3>
+                <p>Productos y categorías</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🪑</div>
+                <h3>Control de Mesas</h3>
+                <p>Estado en tiempo real</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Facturación Combinada</h3>
+                <p>Múltiples mesas en una factura</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎁</div>
+                <h3>Descuentos Automáticos</h3>
+                <p>Sistema de descuentos diarios</p>
+            </div>
+        </div>
+
+        <div class="api-section">
+            <h2>🔐 Autenticación</h2>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="url">/api/auth/login</span>
+                <p>Iniciar sesión y obtener token de acceso</p>
+                <button class="test-button" onclick="testLogin()">Probar Login</button>
+                <div class="result" id="loginResult"></div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/auth/me</span>
+                <p>Información del usuario autenticado</p>
+                <button class="test-button" onclick="testUserInfo()">Probar</button>
+                <div class="result" id="userResult"></div>
+            </div>
+        </div>
+
+        <div class="api-section">
+            <h2>📋 Órdenes</h2>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/orders</span>
+                <p>Listar todas las órdenes</p>
+                <button class="test-button" onclick="testOrders()">Probar</button>
+                <div class="result" id="ordersResult"></div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/orders/kitchen</span>
+                <p>Órdenes para la cocina</p>
+                <button class="test-button" onclick="testKitchenOrders()">Probar</button>
+                <div class="result" id="kitchenResult"></div>
+            </div>
+        </div>
+
+        <div class="api-section">
+            <h2>🍽️ Productos</h2>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/products</span>
+                <p>Catálogo de productos disponibles</p>
+                <button class="test-button" onclick="testProducts()">Probar</button>
+                <div class="result" id="productsResult"></div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/products/categories</span>
+                <p>Categorías de productos</p>
+                <button class="test-button" onclick="testCategories()">Probar</button>
+                <div class="result" id="categoriesResult"></div>
+            </div>
+        </div>
+
+        <div class="api-section">
+            <h2>🪑 Mesas</h2>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/tables/status</span>
+                <p>Estado actual de todas las mesas</p>
+                <button class="test-button" onclick="testTablesStatus()">Probar</button>
+                <div class="result" id="tablesResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://127.0.0.1:8001/api';
+        let authToken = null;
+
+        // Verificar estado de la API al cargar
+        async function checkApiStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/ping`);
+                await response.json();
+
+                document.getElementById('apiStatus').className = 'status online';
+                document.getElementById('statusText').textContent = 'API Online';
+            } catch (error) {
+                console.error('API connection error:', error);
+                document.getElementById('apiStatus').className = 'status offline';
+                document.getElementById('statusText').textContent = 'API Offline';
+            }
+        }
+
+        async function testLogin() {
+            const resultDiv = document.getElementById('loginResult');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Probando login...';
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'admin@bluelagoon.com',
+                        password: 'password'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    authToken = data.data.token;
+                    resultDiv.textContent = `✅ Login exitoso!\n\nToken: ${authToken.substring(0, 50)}...\n\nUsuario: ${data.data.user.name}\nRoles: ${data.data.user.roles.map(r => r.name).join(', ')}`;
+                } else {
+                    resultDiv.textContent = `❌ Error: ${data.message}`;
+                }
+            } catch (error) {
+                resultDiv.textContent = `❌ Error de conexión: ${error.message}`;
+            }
+        }
+
+        async function testUserInfo() {
+            if (!authToken) {
+                alert('Primero debes hacer login');
+                return;
+            }
+
+            const resultDiv = document.getElementById('userResult');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Obteniendo información del usuario...';
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function testOrders() {
+            const resultDiv = document.getElementById('ordersResult');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Obteniendo órdenes...';
+
+            try {
+                const response = await fetch(`${API_BASE}/orders`, {
+                    headers: authToken ? {
+                        'Authorization': `Bearer ${authToken}`
+                    } : {}
+                });
+
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function testKitchenOrders() {
+            const resultDiv = document.getElementById('kitchenResult');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Obteniendo órdenes de cocina...';
+
+            try {
+                const response = await fetch(`${API_BASE}/orders/kitchen`, {
+                    headers: authToken ? {
+                        'Authorization': `Bearer ${authToken}`
+                    } : {}
+                });
+
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function testProducts() {
+            const resultDiv = document.getElementById('productsResult');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Obteniendo productos...';
+
+            try {
+                const response = await fetch(`${API_BASE}/products`, {
+                    headers: authToken ? {
+                        'Authorization': `Bearer ${authToken}`
+                    } : {}
+                });
+
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function testCategories() {
+            const resultDiv = document.getElementById('categoriesResult');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Obteniendo categorías...';
+
+            try {
+                const response = await fetch(`${API_BASE}/products/categories`, {
+                    headers: authToken ? {
+                        'Authorization': `Bearer ${authToken}`
+                    } : {}
+                });
+
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function testTablesStatus() {
+            const resultDiv = document.getElementById('tablesResult');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Obteniendo estado de mesas...';
+
+            try {
+                const response = await fetch(`${API_BASE}/tables/status`, {
+                    headers: authToken ? {
+                        'Authorization': `Bearer ${authToken}`
+                    } : {}
+                });
+
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        // Verificar estado al cargar la página
+        checkApiStatus();
+    </script>
+</body>
+</html>

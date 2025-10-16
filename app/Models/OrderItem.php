@@ -4,12 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OrderItem extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected $fillable = ['order_id', 'product_id', 'quantity', 'price'];
+    protected $fillable = [
+        'order_id',
+        'product_id',
+        'quantity',
+        'price',
+        'notes',
+    ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
+        'quantity' => 'integer'
+    ];
 
     public function order()
     {
@@ -19,5 +31,11 @@ class OrderItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    // Calcular subtotal dinámicamente
+    public function getSubtotalAttribute()
+    {
+        return $this->quantity * $this->price;
     }
 }

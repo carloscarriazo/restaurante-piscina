@@ -14,6 +14,16 @@ class Category extends Model
     protected $fillable = [
         'nombre',
         'descripcion',
+        'activo',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'activo' => 'boolean',
     ];
 
     /**
@@ -22,5 +32,13 @@ class Category extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    /**
+     * Alias for products() relationship (Spanish).
+     */
+    public function productos()
+    {
+        return $this->products();
     }
 }

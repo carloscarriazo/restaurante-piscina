@@ -13,18 +13,23 @@ class OrderStatusSeeder extends Seeder
      */
     public function run(): void
     {
-        // Aquí puedes definir los estados de pedido que deseas insertar en la tabla 'order_statuses'
+        // Estados de pedido para el sistema de cocina
         $orderStatuses = [
             ['nombre' => 'Pendiente', 'descripcion' => 'El pedido está pendiente de ser procesado.'],
-            ['nombre' => 'En preparación', 'descripcion' => 'El pedido está siendo preparado.'],
-            ['nombre' => 'Listo para recoger', 'descripcion' => 'El pedido está listo para ser recogido por el cliente.'],
-            ['nombre' => 'Entregado', 'descripcion' => 'El pedido ha sido entregado al cliente.'],
-            ['nombre' => 'Cancelado', 'descripcion' => 'El pedido ha sido cancelado.'],
+            ['nombre' => 'Confirmada', 'descripcion' => 'El pedido ha sido confirmado y está listo para cocinar.'],
+            ['nombre' => 'En Preparación', 'descripcion' => 'El pedido está siendo preparado en cocina.'],
+            ['nombre' => 'Pagada', 'descripcion' => 'El pedido ha sido pagado completamente.'],
+            ['nombre' => 'Lista', 'descripcion' => 'El pedido está listo para ser servido al cliente.'],
+            ['nombre' => 'Entregada', 'descripcion' => 'El pedido ha sido entregado al cliente.'],
+            ['nombre' => 'Cancelada', 'descripcion' => 'El pedido ha sido cancelado.'],
         ];
 
         // Inserta los estados de pedido en la base de datos
         foreach ($orderStatuses as $status) {
-            DB::table('order_statuses')->insert($status);
+            DB::table('order_statuses')->updateOrInsert(
+                ['nombre' => $status['nombre']],
+                $status
+            );
         }
     }
 }

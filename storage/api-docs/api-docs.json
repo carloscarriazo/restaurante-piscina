@@ -1,0 +1,1894 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Restaurante Piscina",
+        "description": "API para gestión de restaurante con módulos de cocina, meseros, órdenes, facturación y más",
+        "contact": {
+            "name": "Soporte Técnico",
+            "email": "soporte@restaurante-piscina.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://my-default-host.com",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Iniciar sesión",
+                "description": "Autenticar usuario y obtener token de acceso",
+                "operationId": "dd51a484b7fa0f97c7680fdbde14cf5f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "admin@ejemplo.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login exitoso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login exitoso"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Juan Pérez"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "admin@ejemplo.com"
+                                                        },
+                                                        "profile_photo_url": {
+                                                            "type": "string"
+                                                        },
+                                                        "roles": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "string",
+                                                                "example": "admin"
+                                                            }
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "1|abcdef123456..."
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Credenciales inválidas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Las credenciales proporcionadas son incorrectas."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Cerrar sesión",
+                "description": "Invalidar el token de acceso actual",
+                "operationId": "df9bdc6c7a6d9f20b983526b2ec0f698",
+                "responses": {
+                    "200": {
+                        "description": "Logout exitoso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout exitoso"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/me": {
+            "get": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Obtener usuario actual",
+                "description": "Obtener información del usuario autenticado",
+                "operationId": "b5de204f5e452ef51327c691aa99e77c",
+                "responses": {
+                    "200": {
+                        "description": "Información del usuario",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Juan Pérez"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "admin@ejemplo.com"
+                                                        },
+                                                        "profile_photo_url": {
+                                                            "type": "string"
+                                                        },
+                                                        "roles": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/categories": {
+            "get": {
+                "tags": [
+                    "Categorías"
+                ],
+                "summary": "Listar todas las categorías",
+                "operationId": "ac9c4d978ea4e5b72915ca9728e5b8b1",
+                "responses": {
+                    "200": {
+                        "description": "Lista de categorías",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "description": {
+                                                        "type": "string"
+                                                    },
+                                                    "products_count": {
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Categorías"
+                ],
+                "summary": "Crear nueva categoría",
+                "operationId": "cca49a87d9b0ebb9a98ad7c154b71737",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Bebidas"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Bebidas frías y calientes"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Categoría creada exitosamente"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Categorías"
+                ],
+                "summary": "Obtener detalle de una categoría",
+                "operationId": "09767bb2e47dde77dd1e2591428b0ae1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalle de la categoría"
+                    },
+                    "404": {
+                        "description": "Categoría no encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Categorías"
+                ],
+                "summary": "Actualizar categoría",
+                "operationId": "7dcf71887e585de7f881e9eb98d86126",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Categoría actualizada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Categorías"
+                ],
+                "summary": "Eliminar categoría",
+                "operationId": "9b61b65823f4a21f182506b34ddf805c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Categoría eliminada"
+                    },
+                    "400": {
+                        "description": "No se puede eliminar, tiene productos asociados"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/ingredients": {
+            "get": {
+                "tags": [
+                    "Ingredientes"
+                ],
+                "summary": "Listar todos los ingredientes",
+                "operationId": "ca30a55ef34259f063c742b684cc4bff",
+                "parameters": [
+                    {
+                        "name": "low_stock",
+                        "in": "query",
+                        "description": "Filtrar solo ingredientes con stock bajo",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de ingredientes con stock actual"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Ingredientes"
+                ],
+                "summary": "Crear nuevo ingrediente",
+                "operationId": "c2d68c40741ce26dfd17624c54639c04",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "unit"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Tomate"
+                                    },
+                                    "unit": {
+                                        "type": "string",
+                                        "example": "kg"
+                                    },
+                                    "current_stock": {
+                                        "type": "number",
+                                        "example": 50.5
+                                    },
+                                    "minimum_stock": {
+                                        "type": "number",
+                                        "example": 10
+                                    },
+                                    "cost_per_unit": {
+                                        "type": "number",
+                                        "example": 2.5
+                                    },
+                                    "supplier": {
+                                        "type": "string",
+                                        "example": "Proveedor XYZ"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Ingrediente creado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/ingredients/{id}": {
+            "get": {
+                "tags": [
+                    "Ingredientes"
+                ],
+                "summary": "Obtener detalle de un ingrediente",
+                "operationId": "31ceea6e0627b6ebd10d683e8ae3af69",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalle del ingrediente con historial de movimientos"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Ingredientes"
+                ],
+                "summary": "Actualizar ingrediente",
+                "operationId": "644a667784d857e8a6a8074285b1eb5b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ingrediente actualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Ingredientes"
+                ],
+                "summary": "Eliminar ingrediente",
+                "operationId": "f058c3992f4ae8a7e0fbfa77a5450545",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ingrediente eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/ingredients/{id}/adjust-stock": {
+            "post": {
+                "tags": [
+                    "Ingredientes"
+                ],
+                "summary": "Ajustar stock de ingrediente (aumentar o disminuir)",
+                "operationId": "07283c543079bb3575c8fa577bdc98aa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "type",
+                                    "quantity",
+                                    "reason"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "increase",
+                                            "decrease"
+                                        ],
+                                        "example": "increase"
+                                    },
+                                    "quantity": {
+                                        "type": "number",
+                                        "example": 25.5
+                                    },
+                                    "reason": {
+                                        "type": "string",
+                                        "example": "Compra de proveedor"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Stock ajustado correctamente"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/ingredients/{id}/movements": {
+            "get": {
+                "tags": [
+                    "Ingredientes"
+                ],
+                "summary": "Obtener historial de movimientos de un ingrediente",
+                "operationId": "9dbef282c31a9f1a1471b02ce89cf6a7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Historial de movimientos"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/invoices": {
+            "get": {
+                "tags": [
+                    "Facturas"
+                ],
+                "summary": "Listar todas las facturas",
+                "operationId": "2e947f49543378e8d1ac24fc3ebcdcc7",
+                "parameters": [
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "description": "Filtrar por fecha (YYYY-MM-DD)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "payment_method",
+                        "in": "query",
+                        "description": "Filtrar por método de pago",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de facturas"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Facturas"
+                ],
+                "summary": "Crear nueva factura",
+                "operationId": "15892ddc0ad0649e0919d15345232fc5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_id",
+                                    "payment_method"
+                                ],
+                                "properties": {
+                                    "order_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "payment_method": {
+                                        "type": "string",
+                                        "enum": [
+                                            "cash",
+                                            "card",
+                                            "transfer"
+                                        ],
+                                        "example": "cash"
+                                    },
+                                    "customer_name": {
+                                        "type": "string",
+                                        "example": "Juan Pérez"
+                                    },
+                                    "customer_id": {
+                                        "type": "string",
+                                        "example": "V-12345678"
+                                    },
+                                    "customer_phone": {
+                                        "type": "string",
+                                        "example": "+58424-1234567"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "Cliente frecuente"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Factura creada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/invoices/{id}": {
+            "get": {
+                "tags": [
+                    "Facturas"
+                ],
+                "summary": "Obtener detalle de una factura",
+                "operationId": "5d25d392f44d2cf516114d871e72ecb7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalle completo de la factura"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/invoices/daily-summary": {
+            "get": {
+                "tags": [
+                    "Facturas"
+                ],
+                "summary": "Resumen de ventas del día para cierre de caja",
+                "operationId": "b7aa262c5eb6f59c23004b845fd36d1f",
+                "parameters": [
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "description": "Fecha (YYYY-MM-DD), por defecto hoy",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Resumen financiero del día"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/invoices/{id}/cancel": {
+            "post": {
+                "tags": [
+                    "Facturas"
+                ],
+                "summary": "Anular una factura",
+                "operationId": "4440a93f70a74316933d13d5a48c7cec",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "reason"
+                                ],
+                                "properties": {
+                                    "reason": {
+                                        "type": "string",
+                                        "example": "Error en facturación"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Factura anulada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/orders": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Obtener todos los pedidos",
+                "operationId": "d68c0ba9a85b1d31f583d2464f378c59",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filtrar por estado",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "table_id",
+                        "in": "query",
+                        "description": "Filtrar por mesa",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de pedidos"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Crear nuevo pedido",
+                "operationId": "e7be4cae1f1a994f1c7a58881f487441",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "table_id",
+                                    "items"
+                                ],
+                                "properties": {
+                                    "table_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "customer_name": {
+                                        "type": "string",
+                                        "example": "Juan Pérez"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "Sin cebolla"
+                                    },
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "product_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "quantity": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "notes": {
+                                                    "type": "string",
+                                                    "example": "Término medio"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Pedido creado exitosamente"
+                    },
+                    "422": {
+                        "description": "Errores de validación"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/orders/{id}": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Obtener un pedido específico",
+                "operationId": "cfd1afa799955a7b7dd65623ba6e1492",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalles del pedido"
+                    },
+                    "404": {
+                        "description": "Pedido no encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Actualizar un pedido",
+                "operationId": "1e62353d496a51bdc8dc611bb716b6ce",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "table_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "customer_name": {
+                                        "type": "string",
+                                        "example": "Juan Pérez"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "Sin cebolla"
+                                    },
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "product_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "quantity": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Pedido actualizado"
+                    },
+                    "403": {
+                        "description": "Sin permisos"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Cancelar un pedido",
+                "operationId": "a853ddfdcc3906e8e766ee22837ea1c4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pedido cancelado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/orders/{id}/status": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Actualizar estado del pedido",
+                "operationId": "47608266ebf17a668b753f30f3330767",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "pending",
+                                            "confirmed",
+                                            "preparing",
+                                            "ready",
+                                            "served",
+                                            "cancelled"
+                                        ],
+                                        "example": "preparing"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Estado actualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/orders/combine": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Combinar facturación de múltiples pedidos",
+                "operationId": "cdeee69e102c6d511fb1e04c499be734",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_ids"
+                                ],
+                                "properties": {
+                                    "order_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Facturación combinada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/orders/kitchen": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Obtener órdenes pendientes para cocina",
+                "operationId": "a2da34436f58eb535d37247a65d61306",
+                "responses": {
+                    "200": {
+                        "description": "Lista de órdenes para cocina"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/orders/daily-discounts": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Obtener descuentos del día",
+                "operationId": "0818eef5d3a2e053da51c58f85d80706",
+                "responses": {
+                    "200": {
+                        "description": "Lista de descuentos activos"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/recipes": {
+            "get": {
+                "tags": [
+                    "Recetas"
+                ],
+                "summary": "Listar todas las recetas",
+                "operationId": "e6ebf01e62f938e7ce367c7b2fc94110",
+                "responses": {
+                    "200": {
+                        "description": "Lista de recetas con ingredientes"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Recetas"
+                ],
+                "summary": "Crear nueva receta",
+                "operationId": "5ed3009a1c8ce5b784cac78533de2c73",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "product_id",
+                                    "ingredients"
+                                ],
+                                "properties": {
+                                    "product_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Pizza Margherita - Receta Base"
+                                    },
+                                    "ingredients": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "ingredient_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "quantity": {
+                                                    "description": "Cantidad en la unidad del ingrediente",
+                                                    "type": "number",
+                                                    "example": 0.2
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Receta creada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/recipes/{id}": {
+            "get": {
+                "tags": [
+                    "Recetas"
+                ],
+                "summary": "Obtener detalle de una receta",
+                "operationId": "e59df102512a161f3e7be88aaa85a0e1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalle de la receta con ingredientes"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Recetas"
+                ],
+                "summary": "Actualizar receta",
+                "operationId": "573ece0098b0f511b333f1406621b99c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Receta actualizada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Recetas"
+                ],
+                "summary": "Eliminar receta",
+                "operationId": "a527903d2d7195e7456416e97f55faf2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Receta eliminada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/recipes/product/{productId}": {
+            "get": {
+                "tags": [
+                    "Recetas"
+                ],
+                "summary": "Obtener recetas de un producto específico",
+                "operationId": "dc3c7efc00e7c0f7f272078256de7ef1",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Recetas del producto"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/table-assignments": {
+            "get": {
+                "tags": [
+                    "Asignación de Mesas"
+                ],
+                "summary": "Obtener todas las asignaciones de mesas",
+                "operationId": "b2e294573665431691159c011de8168d",
+                "responses": {
+                    "200": {
+                        "description": "Lista de mesas con sus asignaciones"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/table-assignments/assign": {
+            "post": {
+                "tags": [
+                    "Asignación de Mesas"
+                ],
+                "summary": "Asignar un mesero a una mesa",
+                "operationId": "d66f9ed53ec7d4c65fc32da6c3d1c0a5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "table_id",
+                                    "waiter_id"
+                                ],
+                                "properties": {
+                                    "table_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "waiter_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mesa asignada exitosamente"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/table-assignments/unassign": {
+            "post": {
+                "tags": [
+                    "Asignación de Mesas"
+                ],
+                "summary": "Remover asignación de mesero de una mesa",
+                "operationId": "4efb99e931feae6bf162549931d62a90",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "table_id"
+                                ],
+                                "properties": {
+                                    "table_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Asignación removida exitosamente"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/table-assignments/waiter/{waiterId}": {
+            "get": {
+                "tags": [
+                    "Asignación de Mesas"
+                ],
+                "summary": "Obtener mesas asignadas a un mesero específico",
+                "operationId": "48cb36912fccf567030eb80ac6091ec9",
+                "parameters": [
+                    {
+                        "name": "waiterId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Mesas asignadas al mesero"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/table-assignments/bulk-assign": {
+            "post": {
+                "tags": [
+                    "Asignación de Mesas"
+                ],
+                "summary": "Asignar múltiples mesas a un mesero",
+                "operationId": "152aed55ca8cd1c29809748d7becdb57",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "table_ids",
+                                    "waiter_id"
+                                ],
+                                "properties": {
+                                    "table_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    },
+                                    "waiter_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mesas asignadas exitosamente"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/table-assignments/available-waiters": {
+            "get": {
+                "tags": [
+                    "Asignación de Mesas"
+                ],
+                "summary": "Obtener lista de meseros disponibles",
+                "operationId": "e541b42347707e37f6e914319efa6390",
+                "responses": {
+                    "200": {
+                        "description": "Lista de meseros"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/users": {
+            "get": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Listar todos los usuarios",
+                "operationId": "566aed8efb436ca506e0ef51a032ecd9",
+                "parameters": [
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "description": "Filtrar por rol",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de usuarios con roles"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Crear nuevo usuario",
+                "operationId": "be551c1d694a01c164966f58bfa77013",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "role"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Juan Pérez"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "juan@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "role": {
+                                        "description": "Roles: Administrador, Gerente, Mesero, Cocinero, Cajero",
+                                        "type": "string",
+                                        "example": "Mesero"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuario creado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/users/{id}": {
+            "get": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Obtener detalle de un usuario",
+                "operationId": "6f51bd5fa2dddcd25e44cfa53dcbd10a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalle del usuario"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Actualizar usuario",
+                "operationId": "070e37fc9aff78ae73860751bc990ed3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuario actualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Eliminar usuario",
+                "operationId": "0b4133ed462528a5e648b88ead11e929",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuario eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/users/roles/available": {
+            "get": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Obtener lista de roles disponibles",
+                "operationId": "d14543d76afe6fea63d39a95b5342084",
+                "responses": {
+                    "200": {
+                        "description": "Lista de roles"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Ingrese el token JWT obtenido del login",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Categorías",
+            "description": "Gestión de categorías de productos"
+        },
+        {
+            "name": "Ingredientes",
+            "description": "Gestión de ingredientes e inventario"
+        },
+        {
+            "name": "Facturas",
+            "description": "Gestión completa de facturas para caja"
+        },
+        {
+            "name": "Recetas",
+            "description": "Gestión de recetas (productos con sus ingredientes)"
+        },
+        {
+            "name": "Asignación de Mesas",
+            "description": "Gestión de asignación de mesas a meseros"
+        },
+        {
+            "name": "Usuarios",
+            "description": "Gestión de usuarios y roles"
+        },
+        {
+            "name": "Autenticación",
+            "description": "Endpoints para autenticación de usuarios"
+        },
+        {
+            "name": "Orders",
+            "description": "Orders"
+        }
+    ]
+}

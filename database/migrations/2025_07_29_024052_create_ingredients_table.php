@@ -14,7 +14,12 @@ return new class extends Migration
         Schema::create('ingredients', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('unit'); // ej: gramos, litros
+            $table->string('unit'); // ej: gramos, litros, unidades
+            $table->decimal('current_stock', 10, 3)->default(0); // Stock actual
+            $table->decimal('minimum_stock', 10, 3)->default(0); // Stock mínimo (alerta)
+            $table->decimal('cost_per_unit', 10, 2)->default(0); // Costo por unidad
+            $table->string('supplier')->nullable(); // Proveedor
+            $table->boolean('is_active')->default(true); // Si está activo
             $table->timestamps();
         });
     }

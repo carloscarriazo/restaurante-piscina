@@ -13,7 +13,13 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Inicio') }}
                     </x-nav-link>
-                    <x-nav-link href="*" :active="request()->routeIs('pedidos.*')">
+                    <x-nav-link href="{{ route('categories.index') }}" :active="request()->routeIs('categories.*')">
+                        {{ __('Categorías') }}
+                    </x-nav-link>
+                    <x-nav-link href="{{ route('products.index') }}" :active="request()->routeIs('products.*')">
+                        {{ __('Productos') }}
+                    </x-nav-link>
+                    <x-nav-link href="/pedidos" :active="request()->is('pedidos')">
                         {{ __('Pedidos') }}
                     </x-nav-link>
                     <x-nav-link href="*" :active="request()->routeIs('cocina.*')">
@@ -22,17 +28,27 @@
                     <x-nav-link href="*" :active="request()->routeIs('facturacion.*')">
                         {{ __('Facturación') }}
                     </x-nav-link>
-                    <x-nav-link href="*" :active="request()->routeIs('inventario.*')">
+                    <x-nav-link href="{{ route('inventory.index') }}" :active="request()->routeIs('inventory.*')">
                         {{ __('Inventario') }}
                     </x-nav-link>
-                    <x-nav-link href="*" :active="request()->routeIs('configuracion.*')">
-                        {{ __('Configuración') }}
+                    <x-nav-link href="{{ route('recipes.index') }}" :active="request()->routeIs('recipes.*')">
+                        {{ __('Recetas') }}
+                    </x-nav-link>
+                    <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.*')">
+                        {{ __('Usuarios') }}
                     </x-nav-link>
                 </div>
             </div>
 
             <!-- Usuario + Configuración -->
             <div class="hidden sm:flex sm:items-center space-x-4">
+                <!-- Componente de notificaciones en tiempo real -->
+                @auth
+                    <div class="relative">
+                        <livewire:real-time-notifications />
+                    </div>
+                @endauth
+
                 <!-- Foto de Perfil o Nombre -->
                 <div class="relative">
                     <x-dropdown align="right" width="48">
@@ -97,10 +113,16 @@
     <!-- Menú Responsive -->
     <div :class="{'block': open, 'hidden': ! open}" class="sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="*" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Inicio') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link href="*" :active="request()->routeIs('pedidos.*')">
+            <x-responsive-nav-link href="{{ route('categories.index') }}" :active="request()->routeIs('categories.*')">
+                {{ __('Categorías') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('products.index') }}" :active="request()->routeIs('products.*')">
+                {{ __('Productos') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="/pedidos" :active="request()->is('pedidos')">
                 {{ __('Pedidos') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link href="*" :active="request()->routeIs('cocina.*')">

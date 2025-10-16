@@ -20,8 +20,43 @@ class Role extends Model
     /**
      * Get the users associated with the role.
      */
-    public function users():BelongsToMany
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
+    }
+
+    /**
+     * Los permisos asignados a este rol
+     */
+    public function permissions(): BelongsToMany
+    {
+        return $this->belongsToMany(Permission::class, 'role_permission');
+    }
+
+    /**
+     * Asignar un permiso al rol
+     */
+    public function givePermission(Permission $permission): void
+    {
+        $this->permissions()->syncWithoutDetaching([$permission->id]);
+    }
+
+    /**
+     * Revocar un permiso del rol
+     */
+    public function revokePermission(Permission $permission): void
+    {
+        $this->permissions()->detach($permission->id);
+    }
+
+    /**
+     * Verificar si el rol tiene un permiso específico
+     */
+    public function hasPermission(string $permissionSlug): bool
+    {
+        return $this->permissions()
+                   ->where('slug', $permissionSlug)
+                   ->where('is_active', true)
+                   ->exists();
     }
 }
