@@ -86,44 +86,10 @@
                     Iniciar Sesión
                 </x-button>
 
-                <div class="text-center">
-                    <p class="text-xs text-gray-400 flex items-center justify-center gap-1">
-                        <i class="fas fa-info-circle text-cyan-400"></i>
-                        Para acceder como mesero, utiliza las credenciales proporcionadas
-                    </p>
-                </div>
+                <!-- Mensaje informativo eliminado para producción -->
             </div>
         </form>
 
-        <!-- Quick Access Info -->
-        <div class="mt-6 p-4 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-lg border border-cyan-500/20">
-            <h4 class="text-sm font-semibold text-cyan-400 mb-3 flex items-center">
-                <i class="fas fa-user-shield mr-2"></i>
-                Acceso Rápido para Pruebas
-            </h4>
-            <div class="space-y-2 text-xs text-gray-300">
-                <div class="flex items-center justify-between p-2 bg-white/5 rounded">
-                    <span class="flex items-center gap-2">
-                        <i class="fas fa-crown text-yellow-400"></i>
-                        <strong>Administrador:</strong>
-                    </span>
-                    <span class="text-cyan-400">admin@bluelagoon.com</span>
-                </div>
-                <div class="flex items-center justify-between p-2 bg-white/5 rounded">
-                    <span class="flex items-center gap-2">
-                        <i class="fas fa-user text-green-400"></i>
-                        <strong>Mesero:</strong>
-                    </span>
-                    <span class="text-cyan-400">mesero1@bluelagoon.com</span>
-                </div>
-                <div class="flex items-center justify-between p-2 bg-white/5 rounded">
-                    <span class="flex items-center gap-2">
-                        <i class="fas fa-key text-blue-400"></i>
-                        <strong>Contraseña:</strong>
-                    </span>
-                    <span class="text-cyan-400 font-mono">password</span>
-                </div>
-            </div>
-        </div>
+        <!-- Información de acceso rápido eliminada para producción -->
     </x-authentication-card>
 </x-guest-layout>
